@@ -1,11 +1,12 @@
 package com.antonio.diccionario.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "palabra", schema = "diccionariodb")
@@ -26,7 +27,8 @@ public class Palabra {
     private String categoriaGramatical;
 
     @OneToMany(mappedBy = "palabra")
-    private Set<Definicion> definicions = new LinkedHashSet<>();
+    @JsonManagedReference
+    private List<Definicion> definicions = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -52,11 +54,11 @@ public class Palabra {
         this.categoriaGramatical = categoriaGramatical;
     }
 
-    public Set<Definicion> getDefinicions() {
+    public List<Definicion> getDefinicions() {
         return definicions;
     }
 
-    public void setDefinicions(Set<Definicion> definicions) {
+    public void setDefinicions(List<Definicion> definicions) {
         this.definicions = definicions;
     }
 
