@@ -15,4 +15,6 @@ public interface PalabraRepository extends JpaRepository<Palabra, Integer> {
     )
 
     public List<Palabra> getByTermino(String termino);
+
+    List<Palabra> findByCategoriaGramatical(String categoria);
 }

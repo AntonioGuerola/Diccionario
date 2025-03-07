@@ -1,7 +1,9 @@
 package com.antonio.diccionario.services;
 
 import com.antonio.diccionario.exceptions.RecordNotFoundException;
+import com.antonio.diccionario.models.Definicion;
 import com.antonio.diccionario.models.Palabra;
+import com.antonio.diccionario.repositories.DefinicionRepository;
 import com.antonio.diccionario.repositories.PalabraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import java.util.Optional;
 public class PalabraService {
     @Autowired
     private PalabraRepository palabraRepository;
+
+    @Autowired
+    private DefinicionRepository definicionRepository;
 
     public List<Palabra> getAllPalabras() {
         List<Palabra> palabraList = palabraRepository.findAll();
@@ -30,7 +35,7 @@ public class PalabraService {
         if (palabra.isPresent()) {
             return palabra.get();
         } else {
-            throw new RecordNotFoundException("No existe Definición para el id: ", id);
+            throw new RecordNotFoundException("No existe Palabra para el id: ", id);
         }
     }
 
@@ -44,16 +49,16 @@ public class PalabraService {
             Optional<Palabra> palabraOptional = palabraRepository.findById(id);
             if (palabraOptional.isPresent()) {
                 Palabra newPalabra = palabraOptional.get();
+                newPalabra.setDefinicions(palabra.getDefinicions());
                 newPalabra.setTermino(palabra.getTermino());
                 newPalabra.setCategoriaGramatical(palabra.getCategoriaGramatical());
-                newPalabra.setDefinicions(palabra.getDefinicions());
                 newPalabra = palabraRepository.save(newPalabra);
                 return newPalabra;
             } else {
-                throw new RecordNotFoundException("No existe Definición para el id: ", palabra.getId());
+                throw new RecordNotFoundException("No existe Palabra para el id: ", palabra.getId());
             }
         } else {
-            throw new RecordNotFoundException("No hay id en la Definición a actualizar ", 0l);
+            throw new RecordNotFoundException("No hay id en la Palabra a actualizar ", 0l);
         }
     }
 
@@ -62,7 +67,7 @@ public class PalabraService {
         if (palabraOptional.isPresent()) {
             palabraRepository.delete(palabraOptional.get());
         } else {
-            throw new RecordNotFoundException("No existe Definición para el id: ", id);
+            throw new RecordNotFoundException("No existe Palabra para el id: ", id);
         }
     }
 
@@ -72,6 +77,35 @@ public class PalabraService {
             return palabrasList;
         } else {
             return new ArrayList<Palabra>();
+        }
+    }
+
+    public List<Definicion> getDefinicionesByPalabraId(Integer palabraId) throws RecordNotFoundException {
+        Optional<Palabra> palabraOptional = palabraRepository.findById(palabraId);
+        if (palabraOptional.isPresent()) {
+            return palabraOptional.get().getDefinicions(); // Retorna la lista de definiciones
+        } else {
+            throw new RecordNotFoundException("No existe la palabra con id: ", palabraId);
+        }
+    }
+
+    public Palabra createPalabraWithDefiniciones(Palabra palabra) {
+        palabra = palabraRepository.save(palabra);
+        if (palabra.getDefinicions() != null) {
+            for (Definicion definicion : palabra.getDefinicions()) {
+                definicion.setPalabra(palabra); // Establece la relación
+                definicionRepository.save(definicion); // Guarda la definición
+            }
+        }
+        return palabra;
+    }
+
+    public List<Palabra> getPalabrasByCategoriaGramatical(String categoria) {
+        List<Palabra> palabrasList = palabraRepository.findByCategoriaGramatical(categoria);
+        if (!palabrasList.isEmpty()) {
+            return palabrasList;
+        } else {
+            return new ArrayList<Palabra>(); // Retorna una lista vacía si no hay palabras
         }
     }
 }

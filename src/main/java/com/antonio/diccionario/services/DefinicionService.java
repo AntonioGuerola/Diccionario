@@ -2,7 +2,9 @@ package com.antonio.diccionario.services;
 
 import com.antonio.diccionario.exceptions.RecordNotFoundException;
 import com.antonio.diccionario.models.Definicion;
+import com.antonio.diccionario.models.Palabra;
 import com.antonio.diccionario.repositories.DefinicionRepository;
+import com.antonio.diccionario.repositories.PalabraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import java.util.Optional;
 public class DefinicionService {
     @Autowired
     private DefinicionRepository definicionRepository;
+
+    @Autowired
+    private PalabraRepository palabraRepository;
 
     public List<Definicion> getAllDefiniciones() {
         List<Definicion> definicionList = definicionRepository.findAll();
@@ -34,9 +39,14 @@ public class DefinicionService {
         }
     }
 
-    public Definicion createDefinicion(Definicion definicion) {
-        definicion = definicionRepository.save(definicion);
-        return definicion;
+    public Definicion createDefinicion(Integer palabraId, Definicion definicion) {
+        Optional<Palabra> palabraOptional = palabraRepository.findById(palabraId);
+        if (palabraOptional.isPresent()) {
+            definicion.setPalabra(palabraOptional.get());
+            return definicionRepository.save(definicion);
+        } else {
+            throw new RecordNotFoundException("No existe la palabra con id: ", palabraId);
+        }
     }
 
     public Definicion updateDefinicion(Integer id, Definicion definicion) throws RecordNotFoundException {
