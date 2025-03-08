@@ -54,6 +54,19 @@ public class DefinicionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDefinicion);
     }
 
+    @Operation(summary = "Actualizar una definición", description = "Actualiza una definición existente en el diccionario.")
+    @ApiResponse(responseCode = "200", description = "Definición actualizada exitosamente")
+    @ApiResponse(responseCode = "404", description = "Definición no encontrada")
+    @CrossOrigin
+    @PutMapping("/{id}")
+    public ResponseEntity<Definicion> updateDefinicion(
+            @Parameter(description = "ID de la definición a actualizar", required = true)
+            @PathVariable Integer id,
+            @RequestBody Definicion definicion) throws RecordNotFoundException {
+        Definicion updatedDefinicion = definicionService.updateDefinicion(id, definicion);
+        return new ResponseEntity<Definicion>(updatedDefinicion, new HttpHeaders(), HttpStatus.OK);
+    }
+
     @Operation(summary = "Eliminar una definición", description = "Elimina una definición del diccionario.")
     @ApiResponse(responseCode = "202", description = "Definición eliminada exitosamente")
     @ApiResponse(responseCode = "404", description = "Definición no encontrada")
