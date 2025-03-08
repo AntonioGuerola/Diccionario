@@ -10,4 +10,7 @@ public class DiccionarioApplication {
 		SpringApplication.run(DiccionarioApplication.class, args);
 	}
 
+	//URL para abrir Swagger
+	//http://localhost:8080/swagger-ui.html
+
 }

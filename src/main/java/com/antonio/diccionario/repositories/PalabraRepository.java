@@ -18,5 +18,5 @@ public interface PalabraRepository extends JpaRepository<Palabra, Integer> {
 
     List<Palabra> findByCategoriaGramatical(String categoria);
 
-    List<Palabra> findByTerminoStartingWithIgnoreCase(String letra);
+    List<Palabra> findByTerminoStartingWith(String letra);
 }

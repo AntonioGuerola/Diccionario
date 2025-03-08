@@ -110,7 +110,7 @@ public class PalabraService {
     }
 
     public List<Palabra> getPalabrasByInicial(String letra) {
-        List<Palabra> palabrasList = palabraRepository.findByTerminoStartingWithIgnoreCase(letra);
+        List<Palabra> palabrasList = palabraRepository.findByTerminoStartingWith(letra);
         if (!palabrasList.isEmpty()) {
             return palabrasList;
         } else {
