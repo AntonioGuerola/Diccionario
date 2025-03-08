@@ -123,4 +123,16 @@ public class PalabraController {
         List<Palabra> palabrasList = palabraService.getPalabrasByCategoriaGramatical(categoria);
         return new ResponseEntity<List<Palabra>>(palabrasList, new HttpHeaders(), HttpStatus.OK);
     }
+
+    @Operation(summary = "Obtener palabras por inicial", description = "Retorna una lista de palabras que comienzan con la letra especificada.")
+    @ApiResponse(responseCode = "200", description = "Lista de palabras encontrada")
+    @ApiResponse(responseCode = "404", description = "No se encontraron palabras que comiencen con la letra especificada")
+    @CrossOrigin
+    @GetMapping("/inicial/{letra}")
+    public ResponseEntity<List<Palabra>> getPalabrasByInicial(
+            @Parameter(description = "Letra inicial para buscar palabras", required = true)
+            @PathVariable String letra) {
+        List<Palabra> palabrasList = palabraService.getPalabrasByInicial(letra);
+        return new ResponseEntity<List<Palabra>>(palabrasList, new HttpHeaders(), HttpStatus.OK);
+    }
 }

@@ -108,4 +108,13 @@ public class PalabraService {
             return new ArrayList<Palabra>(); // Retorna una lista vacía si no hay palabras
         }
     }
+
+    public List<Palabra> getPalabrasByInicial(String letra) {
+        List<Palabra> palabrasList = palabraRepository.findByTerminoStartingWithIgnoreCase(letra);
+        if (!palabrasList.isEmpty()) {
+            return palabrasList;
+        } else {
+            return new ArrayList<Palabra>(); // Retorna una lista vacía si no hay palabras
+        }
+    }
 }
